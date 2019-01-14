@@ -1,42 +1,27 @@
 # i3-qubes
-Qubes OS rpm for i3 4.12
+i3-gaps 4.12 for Qubes OS 3.2 (*Qubes 4.x build soon!*)
 
-You'll find the full installation instructions and more information on https://sietse.no/i3-wm-in-qubes-os
+# Building & installing
 
-## To install, follow these steps:
+**buildvm:**
+*Note: buildvm must be running the same version of Fedora as dom0*
 
-First, clone the repository in a vm (if needed, install git first):
+    dnf groupinstall "Development Tools" "Development Libraries"
+    git clone https://github.com/unendingPattern/i3-gaps-qubes i3-gaps-qubes
+    wget https://github.com/Airblader/i3/archive/4.12.tar.gz -O i3-gaps-qubes/i3/i3-4.12.tar.gz
+    gunzip < i3-gaps-qubes/i3/i3-4.12.tar.gz | bzip2 > i3-gaps-qubes/i3/i3-4.12.tar.bz2
 
-```
-user@vm$ git clone https://github.com/SietsevanderMolen/i3-qubes.git
-```
+    cd i3-gaps-qubes
+    dnf install -y $(cat build-deps.list)
+    make rpms
 
-Then make sure all dependencies are installed:
+**dom0:**
 
-```
-user@vm$ sudo dnf install -y $(cat build-deps.list)
-```
-
-After that, build the rpm:
-
-```
-user@vm$ make rpms
-```
-
-Then, copy the rpm to your Dom0:
-```
-user@Dom0$ qvm-run --pass-io <vmname> 'cat /path/to/rpm/x86_64/i3-4.12-3.f23.x86_64.rpm' > i3-4.12-3.f23.x86_64.rpm
-```
-
-And finally install it:
-
-```
-user@Dom0$ sudo yum localinstall i3-4.12-3.f23.x86_64.rpm
-```
-
-Log out, log in again and configure to your needs!
+    qvm-run --pass-io buildvm-f2x 'cat /home/user/i3-gaps-qubes/rpm/x86_64/i3-4*.rpm' > i3.rpm
+    sudo dnf install i3.rpm
 
 ## Contributors
+https://github.com/unendingPattern
 https://github.com/SietsevanderMolen
 https://github.com/o-
 https://github.com/minad
