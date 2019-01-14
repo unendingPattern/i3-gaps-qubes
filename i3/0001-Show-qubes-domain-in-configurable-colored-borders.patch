@@ -35,8 +35,8 @@ diff -uNr i3-4.12/include/data.h i3-4.12p/include/data.h
 --- i3-4.12/include/data.h	2016-11-26 03:00:35.566619804 -0800
 +++ i3-4.12p/include/data.h	2016-11-26 01:24:57.578619804 -0800
 @@ -126,6 +126,23 @@
-     POINTER_WARPING_NONE = 1
- } warping_t;
+     int outer;
+ };
  
 + /**
 + * Qubes colors
@@ -604,3 +604,49 @@ diff -uNr i3-4.12/src/x.c i3-4.12p/src/x.c
  
  after_title:
      x_draw_decoration_after_title(con, p);
+--- i3-4.12/src/ipc.c	2016-03-06 16:03:26.000000000 +0000
++++ i3-4.12p/src/ipc.c	2019-01-14 16:06:43.419200724 +0000
+@@ -883,34 +883,7 @@
+  * Returns the version of i3
+  *
+  */
+-IPC_HANDLER(get_version) {
+-    yajl_gen gen = ygenalloc();
+-    y(map_open);
+-
+-    ystr("major");
+-    y(integer, MAJOR_VERSION);
+-
+-    ystr("minor");
+-    y(integer, MINOR_VERSION);
+-
+-    ystr("patch");
+-    y(integer, PATCH_VERSION);
+-
+-    ystr("human_readable");
+-    ystr(i3_version);
+-
+-    ystr("loaded_config_file_name");
+-    ystr(current_configpath);
+-
+-    y(map_close);
+-
+-    const unsigned char *payload;
+-    ylength length;
+-    y(get_buf, &payload, &length);
+-
+-    ipc_send_message(fd, length, I3_IPC_REPLY_TYPE_VERSION, payload);
+-    y(free);
+-}
++// nope
+ 
+ /*
+  * Formats the reply message for a GET_BAR_CONFIG request and sends it to the
+@@ -1058,7 +1031,6 @@
+     handle_tree,
+     handle_get_marks,
+     handle_get_bar_config,
+-    handle_get_version,
+ };
+ 
+ /*
